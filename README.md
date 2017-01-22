@@ -48,6 +48,10 @@ func main()  {
 
 for more documentation [godoc](https://godoc.org/github.com/bbrodriges/is)
 
+## benchmarks
+
+If application speed is important to you as for me, you can check out benchmarks in [every Travis CI build](https://travis-ci.org/bbrodriges/is).
+
 ## Contribute
 
 - Report problems
