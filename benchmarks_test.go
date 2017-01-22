@@ -107,6 +107,31 @@ var (
 		benchmarkCase{RGBcolor, "Space", " "},
 		benchmarkCase{RGBcolor, "False", "rgba(0,31,255)"},
 		benchmarkCase{RGBcolor, "True", "rgb(0,31,255)"},
+		// JSON
+		benchmarkCase{JSON, "Empty", ""},
+		benchmarkCase{JSON, "Space", " "},
+		benchmarkCase{JSON, "False", "123:f00"},
+		benchmarkCase{JSON, "True", "{\"Name\":\"Alice\",\"Body\":\"Hello\",\"Time\":1294706395881547000}"},
+		// Multibyte
+		benchmarkCase{Multibyte, "Empty", ""},
+		benchmarkCase{Multibyte, "Space", " "},
+		benchmarkCase{Multibyte, "False", "abc"},
+		benchmarkCase{Multibyte, "True", "test＠example.com"},
+		// ASCII
+		benchmarkCase{ASCII, "Empty", ""},
+		benchmarkCase{ASCII, "Space", " "},
+		benchmarkCase{ASCII, "False", "ｶﾀｶﾅ"},
+		benchmarkCase{ASCII, "True", "foobar"},
+		// PrintableASCII
+		benchmarkCase{PrintableASCII, "Empty", ""},
+		benchmarkCase{PrintableASCII, "Space", " "},
+		benchmarkCase{PrintableASCII, "False", "newline\n"},
+		benchmarkCase{PrintableASCII, "True", "foobar"},
+		// FullWidth
+		benchmarkCase{FullWidth, "Empty", ""},
+		benchmarkCase{FullWidth, "Space", " "},
+		benchmarkCase{FullWidth, "False", "abc123"},
+		benchmarkCase{FullWidth, "True", "Good＝Parts"},
 	}
 )
 
