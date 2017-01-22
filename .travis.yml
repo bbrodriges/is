@@ -1,7 +1,7 @@
 language: go
 
-install:
-  - go get github.com/alioygur/is
+script:
+  - go test -bench . -benchtime 100ms -coverprofile=is.coverprofile
 
 go:
   - 1.1

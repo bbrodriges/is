@@ -1,24 +1,27 @@
 # is
 
-[![Build Status](https://travis-ci.org/alioygur/is.svg?branch=master)](https://travis-ci.org/alioygur/is)
-[![GoDoc](https://godoc.org/github.com/alioygur/is?status.svg)](https://godoc.org/github.com/alioygur/is)
-[![Go Report Card](https://goreportcard.com/badge/github.com/alioygur/is)](https://goreportcard.com/report/github.com/alioygur/is)
+[![Build Status](https://travis-ci.org/bbrodriges/is.svg?branch=master)](https://travis-ci.org/bbrodriges/is)
+[![GoDoc](https://godoc.org/github.com/bbrodriges/is?status.svg)](https://godoc.org/github.com/bbrodriges/is)
+[![Go Report Card](https://goreportcard.com/badge/github.com/bbrodriges/is)](https://goreportcard.com/report/github.com/bbrodriges/is)
 
 Micro check library in Golang. 
 
 ## installation
 
-`go get gopkg.in/alioygur/is.v1`
+`go get github.com/bbrodriges/is`
 
-## Not only regex
+## No regexs as much as possible
 
 It works with runes as long as is it possible.
-
-Part of source code;
+Part of source code:
 
 ```go
-// Alpha check if the string contains only letters (a-zA-Z). Empty string is valid.
+// Alpha check if the string contains only letters (a-zA-Z).
 func Alpha(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if ('Z' < v || v < 'A') && ('z' < v || v < 'a') {
 			return false
@@ -33,8 +36,7 @@ func Alpha(s string) bool {
 ```go
 package main
 
-import "gopkg.in/alioygur/is.v1"
-import "log"
+import "github.com/bbrodriges/is"
 
 func main()  {
     is.Email("jhon@example.com") // true
@@ -43,22 +45,16 @@ func main()  {
 }
 ```
 
-
-for more documentation [godoc](https://godoc.org/github.com/alioygur/is)
+for more documentation [godoc](https://godoc.org/github.com/bbrodriges/is)
 
 ## Contribute
-
-**we are waiting your contribution**
 
 - Report problems
 - Add/Suggest new features/recipes
 - Improve/fix documentation
 
-Many thanks to our contributors: [contributors](https://github.com/alioygur/is/graphs/contributors)
-
 ## Thanks & Authors
 
-I use code/got inspiration from these excellent libraries:
+Original idea by
 
-- [arasatasaygin/is.js](https://github.com/arasatasaygin/is.js) Micro check library
-- [asaskevich/govalidator](https://github.com/asaskevich/govalidator) [Go] Package of validators and sanitizers for strings, numerics, slices and structs
+- [alioygur/is](https://github.com/alioygur/is) Micro check library

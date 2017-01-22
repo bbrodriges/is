@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/url"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -34,21 +33,24 @@ func Email(s string) bool {
 
 // URL check if the string is an URL.
 func URL(str string) bool {
-	if str == "" || len(str) >= 2083 || len(str) <= 3 || strings.HasPrefix(str, ".") {
+	if str == "" || len(str) >= 2083 || len(str) <= 3 || str[0] == '.' {
 		return false
 	}
+
 	u, err := url.Parse(str)
 	if err != nil {
 		return false
 	}
+
 	if strings.HasPrefix(u.Host, ".") {
 		return false
 	}
+
 	if u.Host == "" && (u.Path != "" && !strings.Contains(u.Path, ".")) {
 		return false
 	}
-	return rxURL.MatchString(str)
 
+	return rxURL.MatchString(str)
 }
 
 // RequestURL check if the string rawurl, assuming
@@ -73,8 +75,12 @@ func RequestURI(rawurl string) bool {
 	return err == nil
 }
 
-// Alpha check if the string contains only letters (a-zA-Z). Empty string is valid.
+// Alpha check if the string contains only letters (a-zA-Z).
 func Alpha(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if ('Z' < v || v < 'A') && ('z' < v || v < 'a') {
 			return false
@@ -83,100 +89,130 @@ func Alpha(s string) bool {
 	return true
 }
 
-//UTFLetter check if the string contains only unicode letter characters.
-//Similar to IsAlpha but for all languages. Empty string is valid.
-func UTFLetter(str string) bool {
-	for _, v := range str {
+// UTFLetter check if the string contains only unicode letter characters.
+// Similar to is.Alpha but for all languages.
+func UTFLetter(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
+	for _, v := range s {
 		if !unicode.IsLetter(v) {
 			return false
 		}
 	}
+
 	return true
 
 }
 
-// Alphanumeric check if the string contains only letters and numbers. Empty string is valid.
+// Alphanumeric check if the string contains only letters and numbers.
 func Alphanumeric(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if ('Z' < v || v < 'A') && ('z' < v || v < 'a') && ('9' < v || v < '0') {
 			return false
 		}
 	}
+
 	return true
 }
 
-// UTFLetterNumeric check if the string contains only unicode letters and numbers. Empty string is valid.
+// UTFLetterNumeric check if the string contains only unicode letters and numbers.
 func UTFLetterNumeric(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
-		if !unicode.IsLetter(v) && !unicode.IsNumber(v) { //letters && numbers are ok
+		if !unicode.IsLetter(v) && !unicode.IsNumber(v) {
 			return false
 		}
 	}
+
 	return true
 }
 
-// Numeric check if the string contains only numbers. Empty string is valid.
+// Numeric check if the string contains only numbers.
 func Numeric(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if '9' < v || v < '0' {
 			return false
 		}
 	}
+
 	return true
 }
 
 // UTFNumeric check if the string contains only unicode numbers of any kind.
-// Numbers can be 0-9 but also Fractions ¾,Roman Ⅸ and Hangzhou 〩. Empty string is valid.
+// Numbers can be 0-9 but also Fractions ¾,Roman Ⅸ and Hangzhou 〩.
 func UTFNumeric(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
-		if unicode.IsNumber(v) == false {
+		if !unicode.IsNumber(v) {
 			return false
 		}
 	}
+
 	return true
 }
 
 // Whole returns true if value is whole number
 func Whole(value float64) bool {
-	return math.Abs(math.Remainder(value, 1)) == 0
+	return math.Remainder(value, 1) == 0
 }
 
 // Natural returns true if value is natural number (positive and whole)
 func Natural(value float64) bool {
-	return Whole(value) && value > 0
+	return value > 0 && Whole(value)
 }
 
-// UTFDigit check if the string contains only unicode radix-10 decimal digits. Empty string is valid.
+// UTFDigit check if the string contains only unicode radix-10 decimal digits.
 func UTFDigit(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if !unicode.IsDigit(v) {
 			return false
 		}
 	}
+
 	return true
 }
 
 // Hexadecimal check if the string is a hexadecimal number.
-func Hexadecimal(str string) bool {
-	_, err := strconv.ParseInt(str, 16, 0)
+func Hexadecimal(s string) bool {
+	_, err := strconv.ParseInt(s, 16, 0)
 	return err == nil
 }
 
 // Hexcolor check if the string is a hexadecimal color.
-func Hexcolor(str string) bool {
-	if str == "" {
+func Hexcolor(s string) bool {
+	if s == "" {
 		return false
 	}
 
-	if str[0] == '#' {
-		str = str[1:]
+	if s[0] == '#' {
+		s = s[1:]
 	}
 
-	if len(str) != 3 && len(str) != 6 {
+	if len(s) != 3 && len(s) != 6 {
 		return false
 	}
 
-	for _, c := range str {
+	for _, c := range s {
 		if ('F' < c || c < 'A') && ('f' < c || c < 'a') && ('9' < c || c < '0') {
 			return false
 		}
@@ -186,19 +222,19 @@ func Hexcolor(str string) bool {
 }
 
 // RGBcolor check if the string is a valid RGB color in form rgb(RRR, GGG, BBB).
-func RGBcolor(str string) bool {
-	if str == "" || len(str) < 10 {
+func RGBcolor(s string) bool {
+	if s == "" || len(s) < 10 {
 		return false
 	}
 
-	if str[0:4] != "rgb(" || str[len(str)-1] != ')' {
+	if s[0:4] != "rgb(" || s[len(s)-1] != ')' {
 		return false
 	}
 
-	str = str[4 : len(str)-1]
-	str = strings.TrimSpace(str)
+	s = s[4 : len(s)-1]
+	s = strings.TrimSpace(s)
 
-	for _, p := range strings.Split(str, ",") {
+	for _, p := range strings.Split(s, ",") {
 		if len(p) > 1 && p[0] == '0' {
 			return false
 		}
@@ -212,69 +248,71 @@ func RGBcolor(str string) bool {
 	return true
 }
 
-// LowerCase check if the string is lowercase. Empty string is valid.
-func LowerCase(str string) bool {
-	if len(str) == 0 {
-		return true
+// LowerCase check if the string is lowercase.
+func LowerCase(s string) bool {
+	if len(s) == 0 {
+		return false
 	}
-	return str == strings.ToLower(str)
+
+	return s == strings.ToLower(s)
 }
 
-// UpperCase check if the string is uppercase. Empty string is valid.
-func UpperCase(str string) bool {
-	if len(str) == 0 {
-		return true
+// UpperCase check if the string is uppercase.
+func UpperCase(s string) bool {
+	if len(s) == 0 {
+		return false
 	}
-	return str == strings.ToUpper(str)
+
+	return s == strings.ToUpper(s)
 }
 
-// Int check if the string is an integer. Empty string is valid.
-func Int(str string) bool {
-	if len(str) == 0 {
-		return true
+// Int check if the string is an integer.
+func Int(s string) bool {
+	if len(s) == 0 {
+		return false
 	}
-	_, err := strconv.Atoi(str)
 
+	_, err := strconv.Atoi(s)
 	return err == nil
 }
 
 // Float check if the string is a float.
-func Float(str string) bool {
-	_, err := strconv.ParseFloat(str, 0)
+func Float(s string) bool {
+	_, err := strconv.ParseFloat(s, 0)
 	return err == nil
 }
 
 // ByteLength check if the string's length (in bytes) falls in a range.
-func ByteLength(str string, min, max int) bool {
-	return len(str) >= min && len(str) <= max
+func ByteLength(s string, min, max int) bool {
+	return len(s) >= min && len(s) <= max
 }
 
 // UUIDv3 check if the string is a UUID version 3.
-func UUIDv3(str string) bool {
-	return UUID(str) && str[14] == '3'
+func UUIDv3(s string) bool {
+	return UUID(s) && s[14] == '3'
 }
 
 // UUIDv4 check if the string is a UUID version 4.
-func UUIDv4(str string) bool {
-	return UUID(str) &&
-		str[14] == '4' &&
-		(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b')
+func UUIDv4(s string) bool {
+	return UUID(s) &&
+		s[14] == '4' &&
+		(s[19] == '8' || s[19] == '9' || s[19] == 'a' || s[19] == 'b')
 }
 
 // UUIDv5 check if the string is a UUID version 5.
-func UUIDv5(str string) bool {
-	return UUID(str) &&
-		str[14] == '5' &&
-		(str[19] == '8' || str[19] == '9' || str[19] == 'a' || str[19] == 'b')
+func UUIDv5(s string) bool {
+	return UUID(s) &&
+		s[14] == '5' &&
+		(s[19] == '8' || s[19] == '9' || s[19] == 'a' || s[19] == 'b')
 }
 
 // UUID check if the string is a UUID (version 3, 4 or 5).
-func UUID(str string) bool {
-	if len(str) != 36 {
+func UUID(s string) bool {
+	if len(s) != 36 {
 		return false
 	}
 
-	for i, c := range str {
+	for i, c := range s {
 		if i == 8 || i == 13 || i == 18 || i == 23 {
 			if c != '-' {
 				return false
@@ -290,146 +328,81 @@ func UUID(str string) bool {
 	return true
 }
 
-// CreditCard check if the string is a credit card.
-func CreditCard(str string) bool {
-	r, _ := regexp.Compile("[^0-9]+")
-	sanitized := r.ReplaceAll([]byte(str), []byte(""))
-	if !rxCreditCard.MatchString(string(sanitized)) {
-		return false
-	}
-	var sum int64
-	var digit string
-	var tmpNum int64
-	var shouldDouble bool
-	for i := len(sanitized) - 1; i >= 0; i-- {
-		digit = string(sanitized[i:(i + 1)])
-		tmpNum, _ = toInt(digit)
-		if shouldDouble {
-			tmpNum *= 2
-			if tmpNum >= 10 {
-				sum += ((tmpNum % 10) + 1)
-			} else {
-				sum += tmpNum
-			}
-		} else {
-			sum += tmpNum
-		}
-		shouldDouble = !shouldDouble
-	}
-
-	if sum%10 == 0 {
-		return true
-	}
-	return false
-}
-
-// ISBN10 check if the string is an ISBN version 10.
-func ISBN10(str string) bool {
-	return ISBN(str, 10)
-}
-
-// ISBN13 check if the string is an ISBN version 13.
-func ISBN13(str string) bool {
-	return ISBN(str, 13)
-}
-
-// ISBN check if the string is an ISBN (version 10 or 13).
-// If version value is not equal to 10 or 13, it will be check both variants.
-func ISBN(str string, version int) bool {
-	r, _ := regexp.Compile("[\\s-]+")
-	sanitized := r.ReplaceAll([]byte(str), []byte(""))
-	var checksum int32
-	var i int32
-	if version == 10 {
-		if !rxISBN10.MatchString(string(sanitized)) {
-			return false
-		}
-		for i = 0; i < 9; i++ {
-			checksum += (i + 1) * int32(sanitized[i]-'0')
-		}
-		if sanitized[9] == 'X' {
-			checksum += 10 * 10
-		} else {
-			checksum += 10 * int32(sanitized[9]-'0')
-		}
-		if checksum%11 == 0 {
-			return true
-		}
-		return false
-	} else if version == 13 {
-		if !rxISBN13.MatchString(string(sanitized)) {
-			return false
-		}
-		factor := []int32{1, 3}
-		for i = 0; i < 12; i++ {
-			checksum += factor[i%2] * int32(sanitized[i]-'0')
-		}
-		if (int32(sanitized[12]-'0'))-((10-(checksum%10))%10) == 0 {
-			return true
-		}
-		return false
-	}
-	return ISBN(str, 10) || ISBN(str, 13)
-}
-
 // JSON check if the string is valid JSON (note: uses json.Unmarshal).
 func JSON(str string) bool {
 	var js json.RawMessage
 	return json.Unmarshal([]byte(str), &js) == nil
 }
 
-// Multibyte check if the string contains one or more multibyte chars. Empty string is valid.
+// Multibyte check if the string contains one or more multibyte chars.
 func Multibyte(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if v >= utf8.RuneSelf {
 			return true
 		}
 	}
 
-	return len(s) == 0
+	return false
 }
 
-// ASCII check if the string contains ASCII chars only. Empty string is valid.
+// ASCII check if the string contains ASCII chars only.
 func ASCII(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if v >= utf8.RuneSelf {
 			return false
 		}
 	}
+
 	return true
 }
 
-// PrintableASCII check if the string contains printable ASCII chars only. Empty string is valid.
+// PrintableASCII check if the string contains printable ASCII chars only.
 func PrintableASCII(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	for _, v := range s {
 		if v < ' ' || v > '~' {
 			return false
 		}
 	}
+
 	return true
 }
 
-// FullWidth check if the string contains any full-width chars. Empty string is valid.
+// FullWidth check if the string contains any full-width chars.
 func FullWidth(str string) bool {
 	if len(str) == 0 {
-		return true
+		return false
 	}
+
 	return rxFullWidth.MatchString(str)
 }
 
-// HalfWidth check if the string contains any half-width chars. Empty string is valid.
+// HalfWidth check if the string contains any half-width chars.
 func HalfWidth(str string) bool {
 	if len(str) == 0 {
-		return true
+		return false
 	}
+
 	return rxHalfWidth.MatchString(str)
 }
 
 // VariableWidth check if the string contains a mixture of full and half-width chars. Empty string is valid.
 func VariableWidth(str string) bool {
 	if len(str) == 0 {
-		return true
+		return false
 	}
+
 	return rxHalfWidth.MatchString(str) && rxFullWidth.MatchString(str)
 }
 
@@ -438,8 +411,8 @@ func Base64(s string) bool {
 	if len(s) == 0 {
 		return false
 	}
-	_, err := base64.StdEncoding.DecodeString(s)
 
+	_, err := base64.StdEncoding.DecodeString(s)
 	return err == nil
 }
 
@@ -459,12 +432,28 @@ func FilePath(str string) (bool, int) {
 }
 
 // DataURI checks if a string is base64 encoded data URI such as an image
-func DataURI(str string) bool {
-	dataURI := strings.Split(str, ",")
-	if !rxDataURI.MatchString(dataURI[0]) {
+func DataURI(s string) bool {
+	if len(s) == 0 {
 		return false
 	}
-	return Base64(dataURI[1])
+
+	if s[:5] != "data:" {
+		return false
+	}
+
+	var ci int
+	for i := range s {
+		if s[i] == ',' {
+			ci = i
+			break
+		}
+	}
+
+	if s[ci-7:ci] != ";base64" {
+		return false
+	}
+
+	return Base64(s[ci+1:])
 }
 
 // ISO3166Alpha2 checks if a string is valid two-letter country code
@@ -498,7 +487,6 @@ func DNSName(str string) bool {
 
 // DialString validates the given string for usage with the various Dial() functions
 func DialString(str string) bool {
-
 	if h, p, err := net.SplitHostPort(str); err == nil && h != "" && p != "" && (DNSName(h) || IP(h)) && Port(p) {
 		return true
 	}
@@ -596,11 +584,32 @@ func Longitude(str string) bool {
 }
 
 // SSN will validate the given string as a U.S. Social Security Number
-func SSN(str string) bool {
-	if str == "" || len(str) != 11 {
+// See: http://stackoverflow.com/a/1517044
+func SSN(s string) bool {
+	if len(s) != 9 && len(s) != 11 {
 		return false
 	}
-	return rxSSN.MatchString(str)
+
+	s = stripNonNumeric(s)
+
+	if len(s) != 9 {
+		return false
+	}
+
+	if s[:3] == "000" || s[:3] == "666" || s[3:5] == "00" || s[5:] == "0000" {
+		return false
+	}
+
+	p, err := strconv.ParseInt(s[:3], 10, 0)
+	if err != nil {
+		return false
+	}
+
+	if 900 <= p && p <= 999 {
+		return false
+	}
+
+	return true
 }
 
 // Semver check if string is valid semantic version
@@ -614,7 +623,7 @@ func StringLength(str string, min int, max int) bool {
 	return slen >= min && slen <= max
 }
 
-//Exists returns whether the given file or directory exists or not
+// Exists returns whether the given file or directory exists or not
 func Exists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -624,22 +633,4 @@ func Exists(path string) (bool, error) {
 		return false, nil
 	}
 	return true, err
-}
-
-// toFloat convert the input string to a float, or 0.0 if the input is not a float.
-func toFloat(str string) (float64, error) {
-	res, err := strconv.ParseFloat(str, 64)
-	if err != nil {
-		res = 0.0
-	}
-	return res, err
-}
-
-// toInt convert the input string to an integer, or 0 if the input is not an integer.
-func toInt(str string) (int64, error) {
-	res, err := strconv.ParseInt(str, 0, 64)
-	if err != nil {
-		res = 0
-	}
-	return res, err
 }

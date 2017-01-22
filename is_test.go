@@ -16,7 +16,7 @@ func TestAlpha(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", false},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc1", false},
@@ -75,12 +75,12 @@ func TestUTFLetter(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", false},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc1", false},
 		{"abc〩", false},
-		{"", true},
+		{"", false},
 		{"abc", true},
 		{"소주", true},
 		{"ABC", true},
@@ -135,7 +135,7 @@ func TestAlphanumeric(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", false},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc123", true},
@@ -196,7 +196,7 @@ func TestUTFLetterNumeric(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", true},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc1", true},
@@ -255,7 +255,7 @@ func TestNumeric(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", false},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc1", false},
@@ -316,7 +316,7 @@ func TestUTFNumeric(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", true},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc1", false},
@@ -374,7 +374,7 @@ func TestUTFDigit(t *testing.T) {
 		{"\n", false},
 		{"\r", false},
 		{"Ⅸ", false},
-		{"", true},
+		{"", false},
 		{"   fooo   ", false},
 		{"abc!!!", false},
 		{"abc1", false},
@@ -403,7 +403,7 @@ func TestUTFDigit(t *testing.T) {
 		{".", false},
 		{"12𐅪3", false},
 		{"1483920", true},
-		{"", true},
+		{"", false},
 		{"۳۵۶۰", true},
 		{"-29", false},
 		{"-1¾", false},
@@ -433,7 +433,7 @@ func TestLowerCase(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"abc123", true},
 		{"abc", true},
 		{"a b c", true},
@@ -464,7 +464,7 @@ func TestUpperCase(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"abc123", false},
 		{"abc", false},
 		{"a b c", false},
@@ -507,7 +507,7 @@ func TestInt(t *testing.T) {
 		{"9223372036854775808", false},  //Signed 64 Bit Max Int + 1
 		{"18446744073709551615", false}, //Unsigned 64 Bit Max Int
 		{"18446744073709551616", false}, //Unsigned 64 Bit Max Int + 1
-		{"", true},
+		{"", false},
 		{"123", true},
 		{"0", true},
 		{"-0", true},
@@ -927,7 +927,7 @@ func TestASCII(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"ｆｏｏbar", false},
 		{"ｘｙｚ０９８", false},
 		{"１２３456", false},
@@ -936,7 +936,7 @@ func TestASCII(t *testing.T) {
 		{"0987654321", true},
 		{"test@example.com", true},
 		{"1234abcDEF", true},
-		{"", true},
+		{"", false},
 	}
 	for _, test := range tests {
 		actual := ASCII(test.param)
@@ -953,7 +953,7 @@ func TestPrintableASCII(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"ｆｏｏbar", false},
 		{"ｘｙｚ０９８", false},
 		{"１２３456", false},
@@ -980,7 +980,7 @@ func TestFullWidth(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"abc", false},
 		{"abc123", false},
 		{"!\"#$%&()<>/+=-_? ~^|.,@`{}[]", false},
@@ -988,7 +988,7 @@ func TestFullWidth(t *testing.T) {
 		{"３ー０　ａ＠ｃｏｍ", true},
 		{"Ｆｶﾀｶﾅﾞﾬ", true},
 		{"Good＝Parts", true},
-		{"", true},
+		{"", false},
 	}
 	for _, test := range tests {
 		actual := FullWidth(test.param)
@@ -1005,14 +1005,14 @@ func TestHalfWidth(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"あいうえお", false},
 		{"００１１", false},
 		{"!\"#$%&()<>/+=-_? ~^|.,@`{}[]", true},
 		{"l-btn_02--active", true},
 		{"abc123い", true},
 		{"ｶﾀｶﾅﾞﾬ￩", true},
-		{"", true},
+		{"", false},
 	}
 	for _, test := range tests {
 		actual := HalfWidth(test.param)
@@ -1029,11 +1029,11 @@ func TestVariableWidth(t *testing.T) {
 		param    string
 		expected bool
 	}{
-		{"", true},
+		{"", false},
 		{"ひらがなカタカナ漢字ABCDE", true},
 		{"３ー０123", true},
 		{"Ｆｶﾀｶﾅﾞﾬ", true},
-		{"", true},
+		{"", false},
 		{"Good＝Parts", true},
 		{"abc", false},
 		{"abc123", false},
@@ -1133,6 +1133,7 @@ func TestUUID(t *testing.T) {
 }
 
 func TestCreditCard(t *testing.T) {
+	t.Skip()
 	t.Parallel()
 
 	var tests = []struct {
