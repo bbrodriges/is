@@ -5,7 +5,7 @@ before_install:
 
 script:
   - go test -bench . -benchtime 100ms -coverprofile=is.coverprofile
-  - goveralls -coverprofile=gover.coverprofile -service=travis-ci
+  - goveralls -coverprofile=is.coverprofile -service=travis-ci
 
 go:
   - 1.2
