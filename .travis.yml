@@ -1,7 +1,11 @@
 language: go
 
+before_install:
+  - go get github.com/mattn/goveralls
+
 script:
   - go test -bench . -benchtime 100ms -coverprofile=is.coverprofile
+  - goveralls -coverprofile=gover.coverprofile -service=travis-ci
 
 go:
   - 1.2
