@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/bbrodriges/is.svg?branch=master)](https://travis-ci.org/bbrodriges/is)
 [![GoDoc](https://godoc.org/github.com/bbrodriges/is?status.svg)](https://godoc.org/github.com/bbrodriges/is)
 [![Go Report Card](https://goreportcard.com/badge/github.com/bbrodriges/is)](https://goreportcard.com/report/github.com/bbrodriges/is)
+[![Coverage Status](https://coveralls.io/repos/github/bbrodriges/is/badge.svg?branch=master)](https://coveralls.io/github/bbrodriges/is?branch=master)
 
 Micro check library in Golang. 
 
