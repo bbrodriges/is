@@ -7,13 +7,13 @@
 
 Micro check library in Golang. 
 
-## installation
+## Installation
 
 `go get github.com/bbrodriges/is`
 
 ## No regexs as much as possible
 
-It works with runes as long as is it possible.
+It works with runes, basic operations (loops, conditions etc) and standart library functions as long as is it possible.
 Part of source code:
 
 ```go
@@ -32,7 +32,7 @@ func Alpha(s string) bool {
 }
 ```
 
-## usage
+## Usage
 
 ```go
 package main
@@ -48,7 +48,7 @@ func main()  {
 
 for more documentation [godoc](https://godoc.org/github.com/bbrodriges/is)
 
-## benchmarks
+## Benchmarks
 
 If application speed is important to you as for me, you can check out benchmarks in [every Travis CI build](https://travis-ci.org/bbrodriges/is).
 
@@ -60,6 +60,15 @@ If application speed is important to you as for me, you can check out benchmarks
 
 ## Thanks & Authors
 
-Original idea by
+Original project:
 
 - [alioygur/is](https://github.com/alioygur/is) Micro check library
+
+## Main differences
+
+This fork has been created because of:
+
+- Some fundamental [disagreements](https://github.com/alioygur/is/issues/6) with author of original repo
+- Unpleasant amount of regular expressions in code.
+
+One of main goals of this repo is to fix all of the above claims.
