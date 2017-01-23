@@ -20,7 +20,7 @@ func VisaCard(s string) bool {
 
 	s = stripNonNumeric(s)
 
-	if len(s) != 13 || len(s) != 16 {
+	if len(s) != 13 && len(s) != 16 {
 		return false
 	}
 
@@ -130,6 +130,10 @@ func JCBCard(s string) bool {
 	}
 
 	s = stripNonNumeric(s)
+
+	if len(s) != 15 && len(s) != 16 {
+		return false
+	}
 
 	if s[0:4] != "2131" && s[0:4] != "1800" && s[0:2] != "35" {
 		return false

@@ -54,21 +54,21 @@ func URL(str string) bool {
 }
 
 // RequestURL check if the string rawurl, assuming
-// it was recieved in an HTTP request, is a valid
+// it was received in an HTTP request, is a valid
 // URL confirm to RFC 3986
 func RequestURL(rawurl string) bool {
 	url, err := url.ParseRequestURI(rawurl)
 	if err != nil {
-		return false //Couldn't even parse the rawurl
+		return false
 	}
 	if len(url.Scheme) == 0 {
-		return false //No Scheme found
+		return false
 	}
 	return true
 }
 
 // RequestURI check if the string rawurl, assuming
-// it was recieved in an HTTP request, is an
+// it was received in an HTTP request, is an
 // absolute URI or an absolute path.
 func RequestURI(rawurl string) bool {
 	_, err := url.ParseRequestURI(rawurl)

@@ -15,6 +15,10 @@ func stripNonNumeric(s string) string {
 
 // See: https://en.wikipedia.org/wiki/Luhn_algorithm
 func luhn(s string) bool {
+	if len(s) == 0 {
+		return false
+	}
+
 	var sum int
 	var alter bool
 

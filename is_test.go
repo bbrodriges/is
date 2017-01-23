@@ -1132,33 +1132,7 @@ func TestUUID(t *testing.T) {
 	}
 }
 
-func TestCreditCard(t *testing.T) {
-	t.Skip()
-	t.Parallel()
-
-	var tests = []struct {
-		param    string
-		expected bool
-	}{
-		{"", false},
-		{"foo", false},
-		{"5398228707871528", false},
-		{"375556917985515", true},
-		{"36050234196908", true},
-		{"4716461583322103", true},
-		{"4716-2210-5188-5662", true},
-		{"4929 7226 5379 7141", true},
-		{"5398228707871527", true},
-	}
-	for _, test := range tests {
-		actual := CreditCard(test.param)
-		if actual != test.expected {
-			t.Errorf("Expected CreditCard(%q) to be %v, got %v", test.param, test.expected, actual)
-		}
-	}
-}
-
-func TestBN(t *testing.T) {
+func TestISBN(t *testing.T) {
 	t.Parallel()
 
 	// Without version
@@ -1681,7 +1655,7 @@ func TestWhole(t *testing.T) {
 	for _, test := range tests {
 		actual := Whole(test.param)
 		if actual != test.expected {
-			t.Errorf("Expected Whole(%q) to be %v, got %v", test.param, test.expected, actual)
+			t.Errorf("Expected Whole(%f) to be %v, got %v", test.param, test.expected, actual)
 		}
 	}
 }
@@ -1703,7 +1677,7 @@ func TestNatural(t *testing.T) {
 	for _, test := range tests {
 		actual := Natural(test.param)
 		if actual != test.expected {
-			t.Errorf("Expected Natural(%q) to be %v, got %v", test.param, test.expected, actual)
+			t.Errorf("Expected Natural(%f) to be %v, got %v", test.param, test.expected, actual)
 		}
 	}
 }
@@ -1729,7 +1703,7 @@ func TestInRange(t *testing.T) {
 	for _, test := range tests {
 		actual := InRange(test.param, test.left, test.right)
 		if actual != test.expected {
-			t.Errorf("Expected InRange(%q, %q, %q) to be %v, got %v", test.param, test.left, test.right, test.expected, actual)
+			t.Errorf("Expected InRange(%f, %f, %f) to be %v, got %v", test.param, test.left, test.right, test.expected, actual)
 		}
 	}
 }
