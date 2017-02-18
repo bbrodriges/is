@@ -4,7 +4,7 @@ before_install:
   - go get github.com/mattn/goveralls
 
 script:
-  - go test -bench . -benchtime 100ms -coverprofile=is.coverprofile
+  - go test -bench . -benchtime 50ms -coverprofile=is.coverprofile
   - goveralls -coverprofile=is.coverprofile -service=travis-ci
 
 go:
