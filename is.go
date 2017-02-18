@@ -380,12 +380,18 @@ func PrintableASCII(s string) bool {
 }
 
 // FullWidth check if the string contains any full-width chars.
-func FullWidth(str string) bool {
-	if len(str) == 0 {
+func FullWidth(s string) bool {
+	if len(s) == 0 {
 		return false
 	}
 
-	return rxFullWidth.MatchString(str)
+	for _, v := range s {
+		if ('z' < v || v < 'a') && (0x7e < v || v < 20) && (65439 < v || v < 65377) && (65500 < v || v < 65440) && (1048288 < v || v < 65512) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // HalfWidth check if the string contains any half-width chars.

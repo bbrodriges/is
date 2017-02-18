@@ -132,6 +132,11 @@ var (
 		benchmarkCase{FullWidth, "Space", " "},
 		benchmarkCase{FullWidth, "False", "abc123"},
 		benchmarkCase{FullWidth, "True", "Good＝Parts"},
+		// HalfWidth
+		benchmarkCase{HalfWidth, "Empty", ""},
+		benchmarkCase{HalfWidth, "Space", " "},
+		benchmarkCase{HalfWidth, "False", "あいうえお"},
+		benchmarkCase{HalfWidth, "True", "l-btn_02--active"},
 	}
 )
 
