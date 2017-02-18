@@ -625,8 +625,83 @@ func SSN(s string) bool {
 }
 
 // Semver check if string is valid semantic version
-func Semver(str string) bool {
-	return rxSemver.MatchString(str)
+func Semver(s string) bool {
+	// minimal valid string is "0.0.1"
+	if len(s) < 5 {
+		return false
+	}
+
+	// invalid special chars sequence
+	if strings.Contains(s, "+-") || strings.Contains(s, "-+") {
+		return false
+	}
+
+	// strip leading "v"
+	if s[0] == 'v' {
+		s = s[1:]
+	}
+
+	// get clean major, clean minor and maybe dirty patch parts
+	p := strings.SplitN(s, ".", 3)
+	if len(p) != 3 {
+		return false
+	}
+
+	// try to extract meta part from patch first
+	p = append(p[:2], strings.SplitN(p[2], "+", 2)...)
+	if len(p) == 3 {
+		// no meta - try to extract pre-release
+		p = append(p[:2], strings.SplitN(p[2], "-", 2)...)
+	} else {
+		// try to extract pre-release and move meta to the end
+		pr := strings.SplitN(p[2], "-", 2)
+		if len(pr) == 2 {
+			p = append(p[:2], pr[0], pr[1], p[3])
+		}
+	}
+
+	// check that major does not have leading zero
+	if len(p[0]) > 1 && p[0][0] == '0' {
+		return false
+	}
+
+	// check that minor does not have leading zero
+	if len(p[1]) > 1 && p[1][0] == '0' {
+		return false
+	}
+
+	// check that patch does not have leading zero
+	if len(p[2]) > 1 && p[2][0] == '0' {
+		return false
+	}
+
+	// check that major, minor and patch are ints
+	if !Int(p[0]) || !Int(p[1]) || !Int(p[2]) {
+		return false
+	}
+
+	// if pre-release or meta exists - check them
+	if len(p) > 3 {
+		for i, sp := range p[3:] {
+			// neither pre-release nor meta parts must not have characters except [0-9a-zA-Z-]
+			for _, v := range sp {
+				if ('Z' < v || v < 'A') && ('z' < v || v < 'a') && ('9' < v || v < '0') && v != '.' && v != '-' {
+					return false
+				}
+			}
+
+			// pre-release part must not have leading zeroes in numeric parts
+			if i == 0 {
+				for _, psp := range strings.Split(sp, ".") {
+					if len(psp) > 1 && psp[0] == '0' && (psp[1] >= '0' && psp[1] <= '9') {
+						return false
+					}
+				}
+			}
+		}
+	}
+
+	return true
 }
 
 // StringLength check string's length (including multi byte strings)

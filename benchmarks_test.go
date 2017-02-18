@@ -137,6 +137,11 @@ var (
 		benchmarkCase{HalfWidth, "Space", " "},
 		benchmarkCase{HalfWidth, "False", "あいうえお"},
 		benchmarkCase{HalfWidth, "True", "l-btn_02--active"},
+		// Semver
+		benchmarkCase{Semver, "Empty", ""},
+		benchmarkCase{Semver, "Space", " "},
+		benchmarkCase{Semver, "False", "1.0.0-b+-9+eta"},
+		benchmarkCase{Semver, "True", "1.0.0-alpha"},
 	}
 )
 
