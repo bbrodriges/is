@@ -395,21 +395,27 @@ func FullWidth(s string) bool {
 }
 
 // HalfWidth check if the string contains any half-width chars.
-func HalfWidth(str string) bool {
-	if len(str) == 0 {
+func HalfWidth(s string) bool {
+	if len(s) == 0 {
 		return false
 	}
 
-	return rxHalfWidth.MatchString(str)
+	for _, v := range s {
+		if (v >= 'a' && v <= 'z') || (v >= 20 && v <= 0x7e) || (v >= 65377 && v <= 65439) || (v >= 65440 && v <= 65500) || (v >= 65512 && v <= 1048288) {
+			return true
+		}
+	}
+
+	return false
 }
 
-// VariableWidth check if the string contains a mixture of full and half-width chars. Empty string is valid.
-func VariableWidth(str string) bool {
-	if len(str) == 0 {
+// VariableWidth check if the string contains a mixture of full and half-width chars.
+func VariableWidth(s string) bool {
+	if len(s) == 0 {
 		return false
 	}
 
-	return rxHalfWidth.MatchString(str) && rxFullWidth.MatchString(str)
+	return HalfWidth(s) && FullWidth(s)
 }
 
 // Base64 check if a string is base64 encoded.
